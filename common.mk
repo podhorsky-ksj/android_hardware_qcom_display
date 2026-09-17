@@ -79,6 +79,11 @@ ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
 # available in the build tree.
 # If the macro is not present, the headers are picked from hardware/qcom/msmXXXX
 # failing which, they are picked from bionic.
-    common_deps += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-    kernel_includes += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+    # LineageOS 23.2's modern kernel build does not stage legacy Qualcomm UAPI
+    # headers in KERNEL_OBJ/usr/include.  Keep the display HAL's old msm8998
+    # interface buildable by also using the selected kernel source UAPI tree.
+    # Use an after-directory, otherwise the kernel's generic linux/types.h and
+    # related headers override Bionic's user-space versions.
+    common_flags += -idirafter $(TOP)/$(TARGET_KERNEL_SOURCE)/include/uapi
+    common_flags += -idirafter $(TOP)/$(TARGET_KERNEL_SOURCE)/drivers/staging/android/uapi
 endif
