@@ -31,6 +31,7 @@
 #include <hardware/hwcomposer2.h>
 #undef HWC2_INCLUDE_STRINGIFICATION
 #undef HWC2_USE_CPP11
+#include <atomic>
 #include <map>
 #include <queue>
 #include <set>

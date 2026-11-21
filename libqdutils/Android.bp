@@ -19,24 +19,31 @@ cc_library_shared {
     ],
 }
 
+// Keep the original gralloc1 handle/metadata ABI without colliding with the
+// newer QSSI modules. Preserve the sonames expected by proprietary clients.
 cc_library_shared {
-    name: "libqdMetaData",
+    name: "libqdMetaData_legacy",
+    stem: "libqdMetaData",
     vendor: true,
     defaults: ["display_defaults"],
-    cflags: [
-        "-Wno-sign-conversion",
-        "-DLOG_TAG=\"qdmetadata\"",
-    ],
-    srcs: ["qdMetaData.cpp","qd_utils.cpp"],
+    enabled: select(soong_config_variable("whyred_legacy_display", "enabled"), {
+        "true": true,
+        default: false,
+    }),
+    export_header_lib_headers: ["display_headers"],
+    cflags: ["-Wno-sign-conversion", "-DLOG_TAG=\"qdmetadata\""],
+    srcs: ["qdMetaData.cpp", "qd_utils.cpp"],
 }
 
-// Remove after WFD moves to use libqdMetaData directly
 cc_library_shared {
-    name: "libqdMetaData.system",
+    name: "libqdMetaData.system_legacy",
+    stem: "libqdMetaData.system",
     defaults: ["display_defaults"],
-    cflags: [
-        "-Wno-sign-conversion",
-        "-DLOG_TAG=\"qdmetadata\"",
-    ],
-    srcs: ["qdMetaData.cpp","qd_utils.cpp"],
+    enabled: select(soong_config_variable("whyred_legacy_display", "enabled"), {
+        "true": true,
+        default: false,
+    }),
+    export_header_lib_headers: ["display_headers"],
+    cflags: ["-Wno-sign-conversion", "-DLOG_TAG=\"qdmetadata\""],
+    srcs: ["qdMetaData.cpp", "qd_utils.cpp"],
 }

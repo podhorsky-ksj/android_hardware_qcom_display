@@ -29,7 +29,7 @@ LOCAL_CLANG                   := true
 
 # TODO: Remove libui after addressing gpu_tonemapper issues
 LOCAL_SHARED_LIBRARIES        := libsdmcore libqservice libbinder libhardware libhardware_legacy \
-                                 libutils libcutils libsync libqdutils libqdMetaData libdl libdrmutils \
+                                 libutils libcutils libsync libqdutils libqdMetaData_legacy libdl libdrmutils \
                                  libsdmutils libc++ liblog libgrallocutils libdl \
                                  vendor.display.config@1.0 libhidlbase \
                                  libui libgpu_tonemapper

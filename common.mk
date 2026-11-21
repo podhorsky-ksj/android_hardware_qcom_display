@@ -1,5 +1,6 @@
 #Common headers
 display_top := $(call my-dir)
+common_includes := $(display_top)/gralloc $(display_top)/libqdutils $(display_top)/include
 display_config_version := $(shell \
     if [ -d "$(TOP)/vendor/qcom/opensource/interfaces/display/config/1.1" ];\
     then echo DISPLAY_CONFIG_1_1; fi)
@@ -73,15 +74,10 @@ common_libs := liblog libutils libcutils libhardware
 common_deps  :=
 kernel_includes :=
 
-ifeq ($(TARGET_COMPILE_WITH_MSM_KERNEL),true)
-# This check is to pick the kernel headers from the right location.
-# If the macro above is defined, we make the assumption that we have the kernel
-# available in the build tree.
-# If the macro is not present, the headers are picked from hardware/qcom/msmXXXX
-# failing which, they are picked from bionic.
-    # LineageOS 23.2's modern kernel build does not stage legacy Qualcomm UAPI
-    # headers in KERNEL_OBJ/usr/include.  Keep the display HAL's old msm8998
-    # interface buildable by also using the selected kernel source UAPI tree.
+ifneq ($(wildcard $(TARGET_KERNEL_SOURCE)/include/uapi),)
+    # Modern builds no longer set TARGET_COMPILE_WITH_MSM_KERNEL or stage
+    # legacy Qualcomm UAPI headers in KERNEL_OBJ/usr/include. Use the selected
+    # kernel source directly when it is available.
     # Use an after-directory, otherwise the kernel's generic linux/types.h and
     # related headers override Bionic's user-space versions.
     common_flags += -idirafter $(TOP)/$(TARGET_KERNEL_SOURCE)/include/uapi
